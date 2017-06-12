@@ -15,7 +15,7 @@ const minutesDisplay = document.querySelectorAll('span')[1];
 const secondsDisplay = document.querySelectorAll('span')[2];
 
 
-// get buttons
+// get incremental buttons
 const secondsUp = document.querySelector('#seconds-up');
 const secondsDown = document.querySelector('#seconds-down');
 
@@ -24,6 +24,10 @@ const minutesDown = document.querySelector('#minutes-down');
 
 const hoursUp = document.querySelector('#hours-up');
 const hoursDown = document.querySelector('#hours-down');
+
+// get control buttons
+const startStopButton = document.querySelector('#startstop');
+const resetButton = document.querySelector('#reset');
 
 // event listeners for up and down buttons
 // disallow values of range
@@ -65,6 +69,19 @@ hoursDown.addEventListener('click', function(){
     }
     updateHoursDisplay();
 });
+
+// control button event listeners
+startStopButton.addEventListener('click', function() {
+    if (timerIsOn) {
+        pauseTimer();
+        this.textContent = 'Start';
+    } else {
+        startTimer();
+        this.textContent = 'Pause';
+    }
+});
+
+resetButton.addEventListener('click', resetTimer);
 
 // functions for changing global time variables
 // (probably unnecessary)
@@ -146,13 +163,22 @@ function pauseTimer() {
 }
 
 function resetTimer() {
-
+    if (!timerIsOn) {
+        hours = 0;
+        minutes = 0;
+        seconds = 0;
+        timerIsPaused = false;
+    }
+    updateSecondsDisplay();
+    updateMinutesDisplay();
+    updateHoursDisplay();
 }
 
 function alarm() {
     //this will actually play sound at some point
     timerIsPaused = false;
     timerIsOn = false;
+    startStopButton.textContent = 'Start';
     alert('ALARM BEEP BEEP');
     clearInterval(timer);
 }
