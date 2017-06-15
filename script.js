@@ -3,11 +3,16 @@ let seconds = 0;
 let minutes = 0;
 let hours = 0;
 
+
+// timer interval
 let timer;
 
 // time function state
 let timerIsOn = false;
 let timerIsPaused = false;
+
+// alarm sound
+let alarmAudio = document.querySelector('audio');
 
 // get display span elements
 const hoursDisplay = document.querySelectorAll('span')[0];
@@ -74,10 +79,8 @@ hoursDown.addEventListener('click', function(){
 startStopButton.addEventListener('click', function() {
     if (timerIsOn) {
         pauseTimer();
-        this.textContent = 'Start';
     } else {
         startTimer();
-        this.textContent = 'Pause';
     }
 });
 
@@ -125,6 +128,7 @@ function updateSecondsDisplay() {
 function startTimer() {
     timerIsPaused = false;
     timerIsOn = true;
+    startStopButton.textContent = 'Pause';
 
     // actual clock function and logic
     // applied to global timer variable so clearInterval() can be called on it later
@@ -157,6 +161,7 @@ function startTimer() {
 }
 
 function pauseTimer() {
+    startStopButton.textContent = 'Start';
     timerIsPaused = true;
     timerIsOn = false;
     clearInterval(timer);
@@ -176,9 +181,11 @@ function resetTimer() {
 
 function alarm() {
     //this will actually play sound at some point
+    alarmAudio.play();
+
     timerIsPaused = false;
     timerIsOn = false;
     startStopButton.textContent = 'Start';
-    alert('ALARM BEEP BEEP');
+
     clearInterval(timer);
 }
