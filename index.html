@@ -2,37 +2,41 @@
 <html>
     <head>
         <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Countdown Timer</title>
+        <script src="https://use.fontawesome.com/11889deceb.js"></script>
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
-        <h1>Timer</h1>
-        <div class="timer">
-            <div class="display hours">
-                <div class="button-up" id="hours-up"></div>
-                <span>00</span>
-                <p class="label">Hours</p>
-                <div class="button-down" id="hours-down"></div>
+        <div class="container">
+            <div class="timer">
+                <div class="display hours">
+                    <div class="button-up" id="hours-up"></div>
+                    <span>00</span>
+                    <p class="label">Hours</p>
+                    <div class="button-down" id="hours-down"></div>
+                </div>
+                <div class="display minutes">
+                    <div class="button-up" id="minutes-up"></div>
+                    <span>00</span>
+                    <p class="label">Minutes</p>
+                    <div class="button-down" id="minutes-down"></div>
+                </div>
+                <div class="display seconds">
+                    <div class="button-up" id="seconds-up"></div>
+                    <span>00</span>
+                    <p class="label">Seconds</p>
+                    <div class="button-down" id="seconds-down"></div>
+                </div>
             </div>
-            <div class="display minutes">
-                <div class="button-up" id="minutes-up"></div>
-                <span>00</span>
-                <p class="label">Minutes</p>
-                <div class="button-down" id="minutes-down"></div>
+            <div class="buttons">
+                <button id="startstop"><i class="fa fa-play"></i></button>
+                <button id="reset"><i class="fa fa-refresh"></i></button>
             </div>
-            <div class="display seconds">
-                <div class="button-up" id="seconds-up"></div>
-                <span>00</span>
-                <p class="label">Seconds</p>
-                <div class="button-down" id="seconds-down"></div>
-            </div>
-        </div>
-        <div class="buttons">
-            <button id="startstop">Start</button>
-            <button id="reset">Reset</button>
         </div>
 
         <audio src="alarms/horn.mp3"></audio>
         <script src="script.js" charset="utf-8"></script>
+        <script src="timer.js" charset="utf-8"></script>
     </body>
 </html>
