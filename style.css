@@ -1,10 +1,9 @@
-* {
+/** {
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    cursor: default;
-}
+}*/
 
 html {
     margin: 0;
@@ -32,7 +31,7 @@ body {
     justify-content: space-around;
     background: #5B5B5B;
     border: 5px solid #A3A3A3;
-    box-shadow: 10px 10px 50px black;
+    box-shadow: 10px 10px 50px #191919;
 }
 
 
@@ -66,6 +65,11 @@ body {
     border-right: 30px solid transparent;
     border-bottom: 30px solid #C8C8C8;
     margin: 0 3%;
+    transition: border-bottom-color 0.2s;
+}
+
+.button-up:hover {
+    border-bottom-color: #FAFAFA;
 }
 
 .button-down {
@@ -75,6 +79,11 @@ body {
     border-right: 30px solid transparent;
     border-top: 30px solid #C8C8C8;
     margin: 0 3%;
+    transition: border-top-color 0.2s;
+}
+
+.button-down:hover {
+    border-top-color: #FAFAFA;
 }
 
 button {
@@ -86,10 +95,37 @@ button {
     font-size: 40px;
     outline: none;
     color: inherit;
+    transition: opacity 0.5s linear;
+}
+
+button:hover {
+    color: #FAFAFA;
 }
 
 .buttons {
     height: 50px;
+}
+
+.github {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    color: #C8C8C8;
+    font-size: 25px;
+    transition: color 0.2s;
+}
+
+.github:hover {
+    color: #FAFAFA;
+}
+
+.inactive {
+    /*position: absolute;*/
+    visibility: hidden;
+    width: 0;
+    margin: 0;
+    padding: 0;
+    opacity: 0;
 }
 
 @media (max-width: 590px) {
