@@ -12,7 +12,7 @@ let timerIsOn = false;
 let timerIsPaused = false;
 
 // alarm sound
-let alarmAudio = document.querySelector('audio');
+let alarmAudio = new Audio('alarms/horn.mp3');
 
 // get display span elements
 const hoursDisplay = document.querySelectorAll('span')[0];
