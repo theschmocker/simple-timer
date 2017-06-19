@@ -115,6 +115,7 @@ function updateDisplay(displayElement, time) {
     }
 }
 
+// will be used to allow setting timer with direct input
 function setDisplayEditMode(bool) {
     secondsDisplay.setAttribute('contenteditable', String(bool));
     minutesDisplay.setAttribute('contenteditable', String(bool));
@@ -160,51 +161,76 @@ function startTimer() {
 }
 
 function pauseTimer() {
-    startStopButton.innerHTML = '<i class="fa fa-play" aria-hidden="true"></i>';
+    // set state
     timerIsPaused = true;
     timerIsOn = false;
-    clearInterval(timer);
     setDisplayEditMode(true);
+
+    // update startStopButton
+    startStopButton.innerHTML = '<i class="fa fa-play" aria-hidden="true"></i>';
+
+    // pause the timer
+    clearInterval(timer);
 }
 
 function resetTimer() {
+    // if timer is off, set state to 0
     if (!timerIsOn) {
         hours = 0;
         minutes = 0;
         seconds = 0;
         timerIsPaused = false;
     }
+
+    // reset display
     updateDisplay(secondsDisplay, seconds);
     updateDisplay(minutesDisplay, minutes);
     updateDisplay(hoursDisplay, hours);
 }
 
 function alarm() {
+    // set state
     alarmIsOn = true;
-
-    timerBackground.classList.add('alarm');
-
-    alarmAudio.currentTime = 1.5;
-    alarmAudio.play();
-    alarmAudio.addEventListener('ended', function () {
-        alarmAudio.currentTime = 5.95;
-        alarmAudio.play();
-    });
-
     timerIsPaused = false;
     timerIsOn = false;
+    setDisplayEditMode(true);
+
+    // changed the timer's background color during alarm
+    timerBackground.classList.add('alarm');
+
+    // start audio at 1.5s (too quiet before that)
+    alarmAudio.currentTime = 1.5;
+
+    // play full alarm once through
+    alarmAudio.play();
+
+    // listens for the end of the alarm
+    alarmAudio.addEventListener('ended', function () {
+        // then plays from the given time
+        alarmAudio.currentTime = 5.95;
+        alarmAudio.play();
+    }); // repeat
+
+    // change startStopButton's symbol to stop
     startStopButton.innerHTML = '<i class="fa fa-stop" aria-hidden="true"></i>';
 
+    // stop timer
     clearInterval(timer);
-    setDisplayEditMode(true);
 }
 
 function stopAlarm() {
+    // set state
     alarmIsOn = false;
+
+    // stop audio
     alarmAudio.pause();
 
+    // reset background to default
     timerBackground.classList.remove('alarm');
+
+    // reset startStopButton to play
     startStopButton.innerHTML = '<i class="fa fa-play" aria-hidden="true"></i>';
 }
 
+// set contenteditable on displays on page load
 setDisplayEditMode(true);
