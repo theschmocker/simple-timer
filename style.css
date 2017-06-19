@@ -32,6 +32,7 @@ body {
     background: #5B5B5B;
     border: 5px solid #A3A3A3;
     box-shadow: 10px 10px 50px #191919;
+    transition: background 0.5s;
 }
 
 
@@ -126,6 +127,10 @@ button:hover {
     margin: 0;
     padding: 0;
     opacity: 0;
+}
+
+.alarm {
+    background: #b53636;
 }
 
 @media (max-width: 590px) {

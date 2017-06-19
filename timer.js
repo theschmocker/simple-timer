@@ -4,15 +4,20 @@ let minutes = 0;
 let hours = 0;
 
 
-// timer interval
+// interval return values
 let timer;
+let alarmInterval;
 
-// time function state
+// timer state variables
 let timerIsOn = false;
 let timerIsPaused = false;
+let alarmIsOn = false;
 
 // alarm sound
 let alarmAudio = new Audio('alarms/horn.mp3');
+
+// timer background
+const timerBackground = document.querySelector('.container');
 
 // get display span elements
 const hoursDisplay = document.querySelectorAll('span')[0];
@@ -37,51 +42,54 @@ const resetButton = document.querySelector('#reset');
 // event listeners for up and down buttons
 // disallow values of range
 secondsUp.addEventListener('click', function(){
-    if (seconds < 59  && !timerIsOn){
+    if (seconds < 59  && !timerIsOn && !alarmIsOn){
         incrementSeconds(1);
     }
-    updateSecondsDisplay()
+    updateDisplay(secondsDisplay, seconds)
 });
 secondsDown.addEventListener('click', function(){
-    if (seconds > 0  && !timerIsOn){
+    if (seconds > 0  && !timerIsOn && !alarmIsOn){
         incrementSeconds(-1);
     }
-    updateSecondsDisplay()
+    updateDisplay(secondsDisplay, seconds)
 });
 
 minutesUp.addEventListener('click', function(){
-    if (minutes < 59  && !timerIsOn){
+    if (minutes < 59  && !timerIsOn && !alarmIsOn){
         incrementMinutes(1);
     }
-    updateMinutesDisplay()
+    updateDisplay(minutesDisplay, minutes)
 });
 minutesDown.addEventListener('click', function(){
-    if (minutes > 0  && !timerIsOn){
+    if (minutes > 0  && !timerIsOn && !alarmIsOn){
         incrementMinutes(-1);
     }
-    updateMinutesDisplay()
+    updateDisplay(minutesDisplay, minutes)
 });
 
 hoursUp.addEventListener('click', function(){
-    if (hours < 99 && !timerIsOn){
+    if (hours < 99 && !timerIsOn && !alarmIsOn){
         incrementHours(1);
     }
-    updateHoursDisplay();
+    updateDisplay(hoursDisplay, hours)
 });
 hoursDown.addEventListener('click', function(){
-    if (hours > 0 && !timerIsOn){
+    if (hours > 0 && !timerIsOn && !alarmIsOn){
         incrementHours(-1);
     }
-    updateHoursDisplay();
+    updateDisplay(hoursDisplay, hours)
 });
 
 // control button event listeners
 startStopButton.addEventListener('click', function() {
     if (timerIsOn) {
         pauseTimer();
+    } else if (alarmIsOn) {
+        stopAlarm();
     } else {
         startTimer();
     }
+
 });
 
 resetButton.addEventListener('click', resetTimer);
@@ -98,29 +106,19 @@ function incrementSeconds(num) {
     seconds += num;
 }
 
-// functions to update the displays spans according to time variables
-// want to DRY this out more
-function updateHoursDisplay() {
-    if (String(hours).length < 2) {
-        //maintain two-digit format on clock
-        hoursDisplay.textContent = '0' + hours;
+// update display span in two digit format
+function updateDisplay(displayElement, time) {
+    if (String(time).length < 2) {
+        displayElement.textContent = '0' + time
     } else {
-        hoursDisplay.textContent = hours;
+        displayElement.textContent = time;
     }
 }
-function updateMinutesDisplay(time) {
-    if (String(minutes).length < 2) {
-        minutesDisplay.textContent = '0' + minutes;
-    } else {
-        minutesDisplay.textContent = minutes;
-    }
-}
-function updateSecondsDisplay() {
-    if (String(seconds).length < 2) {
-        secondsDisplay.textContent = '0' + seconds;
-    } else {
-        secondsDisplay.textContent = seconds;
-    }
+
+function setDisplayEditMode(bool) {
+    secondsDisplay.setAttribute('contenteditable', String(bool));
+    minutesDisplay.setAttribute('contenteditable', String(bool));
+    hoursDisplay.setAttribute('contenteditable', String(bool));
 }
 
 //timer functionality
@@ -128,6 +126,7 @@ function updateSecondsDisplay() {
 function startTimer() {
     timerIsPaused = false;
     timerIsOn = true;
+    setDisplayEditMode(false);
     startStopButton.innerHTML = '<i class="fa fa-pause" aria-hidden="true"></i>';
 
     // actual clock function and logic
@@ -153,9 +152,9 @@ function startTimer() {
             minutes = 59;
         }
 
-        updateSecondsDisplay();
-        updateMinutesDisplay();
-        updateHoursDisplay();
+        updateDisplay(secondsDisplay, seconds);
+        updateDisplay(minutesDisplay, minutes);
+        updateDisplay(hoursDisplay, hours);
 
     }, 1000); // runs every second, because it's a clock
 }
@@ -165,6 +164,7 @@ function pauseTimer() {
     timerIsPaused = true;
     timerIsOn = false;
     clearInterval(timer);
+    setDisplayEditMode(true);
 }
 
 function resetTimer() {
@@ -174,18 +174,37 @@ function resetTimer() {
         seconds = 0;
         timerIsPaused = false;
     }
-    updateSecondsDisplay();
-    updateMinutesDisplay();
-    updateHoursDisplay();
+    updateDisplay(secondsDisplay, seconds);
+    updateDisplay(minutesDisplay, minutes);
+    updateDisplay(hoursDisplay, hours);
 }
 
 function alarm() {
-    //this will actually play sound at some point
+    alarmIsOn = true;
+
+    timerBackground.classList.add('alarm');
+
+    alarmAudio.currentTime = 1.5;
     alarmAudio.play();
+    alarmAudio.addEventListener('ended', function () {
+        alarmAudio.currentTime = 5.95;
+        alarmAudio.play();
+    });
 
     timerIsPaused = false;
     timerIsOn = false;
-    startStopButton.innerHTML = '<i class="fa fa-play" aria-hidden="true"></i>';
+    startStopButton.innerHTML = '<i class="fa fa-stop" aria-hidden="true"></i>';
 
     clearInterval(timer);
+    setDisplayEditMode(true);
 }
+
+function stopAlarm() {
+    alarmIsOn = false;
+    alarmAudio.pause();
+
+    timerBackground.classList.remove('alarm');
+    startStopButton.innerHTML = '<i class="fa fa-play" aria-hidden="true"></i>';
+}
+
+setDisplayEditMode(true);
