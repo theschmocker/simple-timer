@@ -3,7 +3,6 @@ let seconds = 0;
 let minutes = 0;
 let hours = 0;
 
-
 // interval return values
 let timer;
 let alarmInterval;
@@ -23,6 +22,8 @@ const timerBackground = document.querySelector('.container');
 const hoursDisplay = document.querySelectorAll('span')[0];
 const minutesDisplay = document.querySelectorAll('span')[1];
 const secondsDisplay = document.querySelectorAll('span')[2];
+
+const displays = [hoursDisplay, minutesDisplay, secondsDisplay];
 
 
 // get incremental buttons
@@ -94,6 +95,58 @@ startStopButton.addEventListener('click', function() {
 
 resetButton.addEventListener('click', resetTimer);
 
+displays.forEach(display => {
+    display.addEventListener('keydown', function(e) {
+        if ((display.textContent.length >= 2 || e.keyCode > 58) && e.keyCode !== 8) {
+            e.preventDefault();
+        }
+        if (e.keyCode === 13) {
+            e.preventDefault();
+            this.blur();
+        }
+
+    });
+    display.addEventListener('focus', function() {
+        if(Boolean(this.attributes.contenteditable)) {
+            let selection = window.getSelection();
+            let range = document.createRange();
+            range.selectNodeContents(this);
+            selection.removeAllRanges();
+            selection.addRange(range);
+            selection.deleteFromDocument();
+        }
+    });
+    display.addEventListener('blur', function() {
+        let time = (display.textContent === '')? 0 : Number(display.textContent);
+
+        switch (display) {
+            case hoursDisplay:
+                hours = time;
+                break;
+            case minutesDisplay:
+                if (time > 59) {
+                    hours += Math.floor(time / 60);
+                    time -= 60;
+                }
+                minutes = time;
+                break;
+            case secondsDisplay:
+                if (time > 59) {
+                    minutes += Math.floor(time / 60);
+                    time -= 60;
+                }
+                seconds = time;
+                break;
+            default:
+                break;
+        }
+
+        updateDisplay(hoursDisplay, hours);
+        updateDisplay(minutesDisplay, minutes);
+        updateDisplay(secondsDisplay, seconds);
+    });
+});
+
 // functions for changing global time variables
 // (probably unnecessary)
 function incrementHours(num) {
@@ -117,9 +170,9 @@ function updateDisplay(displayElement, time) {
 
 // will be used to allow setting timer with direct input
 function setDisplayEditMode(bool) {
-    secondsDisplay.setAttribute('contenteditable', String(bool));
-    minutesDisplay.setAttribute('contenteditable', String(bool));
-    hoursDisplay.setAttribute('contenteditable', String(bool));
+    displays.forEach(display => {
+        display.setAttribute('contenteditable', String(bool));
+    });
 }
 
 //timer functionality
